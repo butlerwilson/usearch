@@ -1,8 +1,9 @@
-#ifndef _READ_DOCUMENTS_HPP_
-#define _READ_DOCUMENTS_HPP_ 
+#ifndef _READ_DOCUMENTS_H_
+#define _READ_DOCUMENTS_H_ 
 
 #include <string>
 #include <vector>
+#include <fstream>
 
 class Documents {
 public:
@@ -11,11 +12,14 @@ public:
         return _files.size();
     }
 
+    std::string read_document(std::string filename);
+    std::pair<std::string, std::string> next();
+
 private:
     std::string _document_dir;
     std::vector<std::string> _files;
     
-    std::vector<std::string> initFiles();
+    size_t initFiles();
 };
 
 #endif

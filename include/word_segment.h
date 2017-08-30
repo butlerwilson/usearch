@@ -62,7 +62,6 @@ private:
     const char* user_defined_dict_file_ = "data/dict/review/user.dict.utf8";
     const char* user_stop_words_file_ = "data/dict/review/stop_words.utf8";
 
-
     std::shared_ptr<cppjieba::Jieba> jieba_;
 };
 

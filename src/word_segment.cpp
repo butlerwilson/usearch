@@ -107,5 +107,3 @@ std::vector<std::pair<std::string, std::pair<size_t, double>>>
 
     return ret_words_with_position;
 }
-
-#endif
