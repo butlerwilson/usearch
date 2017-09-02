@@ -1,4 +1,5 @@
 #include <string>
+#include <vector>
 #include <iostream>
 
 #include "read_documents.h"
@@ -17,7 +18,13 @@ int main()
              std::cout << "read file failed. continue" << std::endl;
          } else {
              std::string content = item->second;
+             std::vector<std::string> words = segment.words_segment(content);
 
+            for (std::vector<std::string>::iterator it = words.begin();
+                it != words.end(); ++it) {
+                std::cout << *it << std::endl;    
+            }
+            break;
          }
      }
 

@@ -1,6 +1,6 @@
 #include "word_segment.h"
 
-size_t WordSegment::insert_user_words(const std::string &input_filename);
+size_t WordSegment::insert_user_words(const std::string &input_filename)
 {
     size_t words_count = 0;
     std::ifstream in(input_filename);
@@ -16,7 +16,7 @@ size_t WordSegment::insert_user_words(const std::string &input_filename);
         boost::split(segments, oneline, boost::is_any_of(" "));
         std::string word = segments[0];
         std::string frequent = segments[1];
-        bool res = jieba_.InsertUserWord(word);
+        bool res = jieba_->InsertUserWord(word);
         words_count += 1;
     }
 
@@ -26,12 +26,12 @@ size_t WordSegment::insert_user_words(const std::string &input_filename);
 std::vector<std::string> WordSegment::words_segment(const std::string &paragraph)
 {
     std::vector<std::string> words;
-    jieba_.CutForSearch(paragraph, words);
+    jieba_->CutForSearch(paragraph, words);
 
     return words;
 }
 
-std::map<std::string, int> WordSegment::words_segment_with_frequent(const std::string &paragraph);
+std::map<std::string, int> WordSegment::words_segment_with_frequent(const std::string &paragraph)
 {
     std::vector<std::string> words;
     std::map<std::string, int> words_frequent;
@@ -39,7 +39,7 @@ std::map<std::string, int> WordSegment::words_segment_with_frequent(const std::s
     words = words_segment(paragraph);
     for (std::vector<std::string>::iterator it = words.begin(); it != words.end(); ++it) {
        std::string word = *it;
-       if (words_frequent.find(word) == words_frequent_words.end())
+       if (words_frequent.find(word) == words_frequent.end())
            words_frequent[word] = 0;
         ++words_frequent[word];
     }
@@ -66,12 +66,12 @@ std::vector<std::pair<std::string, size_t>> WordSegment::words_segment_with_posi
     std::vector<std::pair<std::string, size_t>> ret_words_with_position;
     std::vector<cppjieba::Word> ori_words_with_position;
 
-    jieba_.CutForSearch(paragraph, ori_words_with_position, true);
+    jieba_->CutForSearch(paragraph, ori_words_with_position, true);
 
     for (std::vector<cppjieba::Word>::const_iterator it = ori_words_with_position.begin();
-        it !+ ori_words_with_position.end(); ++it) {
+        it != ori_words_with_position.end(); ++it) {
         std::string word = it->word;
-        size_t offset = it->offsets;
+        size_t offset = it->offset;
         ret_words_with_position.push_back(std::pair<std::string, size_t>(word, offset));
     }
 
@@ -79,7 +79,7 @@ std::vector<std::pair<std::string, size_t>> WordSegment::words_segment_with_posi
 }
 
 std::vector<std::pair<std::string, std::pair<size_t, double>>>
-  WordSegment::words_segment_with_weight(const std::string &paragraph, size_t topK = 10)
+  WordSegment::words_segment_with_weight(const std::string &paragraph, size_t topK)
 {
     //Word struct comes from cppjieba/KeywordExtractor.hpp
     //struct Word {
@@ -88,13 +88,14 @@ std::vector<std::pair<std::string, std::pair<size_t, double>>>
     //    double weight;
     //}; // struct Word
 
-    std::vector<std::pair<std::string, std::pair<size_t. double>>> ret_words_with_position;
+    std::vector<std::pair<std::string, std::pair<size_t, double>>> ret_words_with_position;
     std::vector<cppjieba::KeywordExtractor::Word> ori_words_with_position;
 
-    jieba_.extractor.Extract(paragraph, ori_words_with_position, topK);
+    jieba_->extractor.Extract(paragraph, ori_words_with_position, topK);
 
-    for (std::vector<cppjieba::Word>::const_iterator it = ori_words_with_position.begin();
-        it !+ ori_words_with_position.end(); ++it) {
+    for (std::vector<cppjieba::KeywordExtractor::Word>::const_iterator 
+        it = ori_words_with_position.begin();
+        it != ori_words_with_position.end(); ++it) {
         std::string word = it->word;
         size_t offset = (it->offsets)[0];
         double weight = it->weight;
