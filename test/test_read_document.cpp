@@ -2,12 +2,10 @@
 #include <iostream>
 
 #include "read_documents.h"
-#include "word_segment.h"
 
 int main()
 {
     Documents *document = new Documents("/Users/youngcy/Works/cpplang/usearch/data/documents");
-    WordSegment segment = WordSegment();
 
     while (document->has_next()) {
          std::pair<std::string, std::string> *item = 

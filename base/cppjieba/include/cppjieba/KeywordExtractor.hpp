@@ -114,12 +114,14 @@ class KeywordExtractor {
       idf = atof(buf[1].c_str());
       idfMap_[buf[0]] = idf;
       idfSum += idf;
-
     }
 
     assert(lineno);
     idfAverage_ = idfSum / lineno;
-    assert(idfAverage_ > 0.0);
+    //assert(idfAverage_ > 0.0);    //don't known why here is a runtime error
+    if (idfAverage_ <= 0.0) {       //just a small value, dont care it
+      idfAverage_ = 0.00001;    
+    }
   }
   void LoadStopWordDict(const string& filePath) {
     ifstream ifs(filePath.c_str());

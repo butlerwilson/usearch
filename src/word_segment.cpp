@@ -47,7 +47,7 @@ std::map<std::string, int> WordSegment::words_segment_with_frequent(const std::s
     return words_frequent; 
 }
 
-std::vector<std::pair<std::string, size_t>> WordSegment::words_segment_with_position(const std::string &paragraph)
+std::map<std::string, size_t> WordSegment::words_segment_with_position(const std::string &paragraph)
 {
     //Word struct comes from cppjieba/Unicode.hpp.hpp
     //struct Word {
@@ -63,7 +63,7 @@ std::vector<std::pair<std::string, size_t>> WordSegment::words_segment_with_posi
     //  }
     //}; // struct Word
 
-    std::vector<std::pair<std::string, size_t>> ret_words_with_position;
+    std::map<std::string, size_t> ret_words_with_position;
     std::vector<cppjieba::Word> ori_words_with_position;
 
     jieba_->CutForSearch(paragraph, ori_words_with_position, true);
@@ -72,13 +72,13 @@ std::vector<std::pair<std::string, size_t>> WordSegment::words_segment_with_posi
         it != ori_words_with_position.end(); ++it) {
         std::string word = it->word;
         size_t offset = it->offset;
-        ret_words_with_position.push_back(std::pair<std::string, size_t>(word, offset));
+        ret_words_with_position[word] = offset;
     }
 
     return ret_words_with_position;
 }
 
-std::vector<std::pair<std::string, std::pair<size_t, double>>>
+std::map<std::string, std::pair<size_t, double>>
   WordSegment::words_segment_with_weight(const std::string &paragraph, size_t topK)
 {
     //Word struct comes from cppjieba/KeywordExtractor.hpp
@@ -88,7 +88,7 @@ std::vector<std::pair<std::string, std::pair<size_t, double>>>
     //    double weight;
     //}; // struct Word
 
-    std::vector<std::pair<std::string, std::pair<size_t, double>>> ret_words_with_position;
+    std::map<std::string, std::pair<size_t, double>> ret_words_with_position;
     std::vector<cppjieba::KeywordExtractor::Word> ori_words_with_position;
 
     jieba_->extractor.Extract(paragraph, ori_words_with_position, topK);
@@ -99,11 +99,7 @@ std::vector<std::pair<std::string, std::pair<size_t, double>>>
         std::string word = it->word;
         size_t offset = (it->offsets)[0];
         double weight = it->weight;
-        ret_words_with_position.push_back(
-            std::pair<std::string, std::pair<size_t, double>>(
-            word,
-            std::pair<size_t, double>(offset, weight))
-        );
+        ret_words_with_position[word] = std::pair<size_t, double>(offset, weight);
     }
 
     return ret_words_with_position;
